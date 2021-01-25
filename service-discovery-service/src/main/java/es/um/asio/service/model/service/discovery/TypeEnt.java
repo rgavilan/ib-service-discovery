@@ -22,7 +22,6 @@ public class TypeEnt {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = Columns.ID)
-    @EqualsAndHashCode.Include
     @ApiModelProperty(hidden = true)
     private long id;
 

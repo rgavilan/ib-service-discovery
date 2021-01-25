@@ -48,6 +48,12 @@ public class ServiceDiscoveryController {
         return service.addType(nodeName,serviceName,typeName,suffixURL);
     }
 
+    @GetMapping()
+    public List<NodeEnt> getAll(
+    ) {
+        return service.getAllNodes();
+    }
+
     @GetMapping(Mappings.NODE)
     public NodeEnt getNodeByName(
             @ApiParam(name = "nodeName", value = "Node name", required = true)
@@ -62,6 +68,16 @@ public class ServiceDiscoveryController {
             @RequestParam(required = true) @Validated(Create.class) final String serviceName
     ) {
         return service.getServices(serviceName);
+    }
+
+    @GetMapping(Mappings.SERVICE_TYPE)
+    public List<NodeEnt> getServiceByNameAndType(
+            @ApiParam(name = "serviceName", value = "Service name", required = true)
+            @RequestParam(required = true) @Validated(Create.class) final String serviceName,
+            @ApiParam(name = "typeName", value = "Type name", required = true)
+            @RequestParam(required = true) @Validated(Create.class) final String typeName
+    ) {
+        return service.getServices(serviceName,typeName);
     }
 
 
@@ -79,6 +95,8 @@ public class ServiceDiscoveryController {
         protected static final String BASE = "/service-discovery";
 
         protected static final String SERVICE = "/service";
+
+        protected static final String SERVICE_TYPE = "/service/type";
 
         protected static final String NODE = "/node";
 

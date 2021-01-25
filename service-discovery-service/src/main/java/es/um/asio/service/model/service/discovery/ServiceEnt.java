@@ -31,7 +31,6 @@ public class ServiceEnt {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = Columns.ID)
-    @EqualsAndHashCode.Include
     @ApiModelProperty(hidden = true)
     private long id;
 
@@ -63,6 +62,7 @@ public class ServiceEnt {
     @JsonIgnore
     @ManyToOne(optional = false, cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinColumn(name = "node_id",nullable = false)
+    @EqualsAndHashCode.Include
     private NodeEnt nodeEnt;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "service", cascade = CascadeType.ALL)
@@ -94,7 +94,7 @@ public class ServiceEnt {
             sb.append(String.format(":%d",this.port));
         }
         return new URL(sb.toString());
-    };
+    }
 
     public URL buildHealthURL() throws MalformedURLException {
         StringBuffer sb = new StringBuffer();
@@ -103,7 +103,14 @@ public class ServiceEnt {
             sb.append(this.healthEndpoint.startsWith("/")?this.healthEndpoint:String.format("/%s",this.healthEndpoint));
         }
         return new URL(sb.toString());
-    };
+    }
+
+    public void merge(ServiceEnt other) {
+        this.baseURL = other.baseURL;
+        this.port = other.port;
+        this.healthEndpoint = other.healthEndpoint;
+        this.status = other.status;
+    }
 
     /**
      * Column name constants.

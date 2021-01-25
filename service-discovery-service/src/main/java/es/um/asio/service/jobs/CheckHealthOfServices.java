@@ -80,6 +80,36 @@ public class CheckHealthOfServices {
         }
     }
 
+    public void checkHealthOfServices(NodeEnt node) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE,-7);
+        healthRequestService.deleteOldHealthRequest(c.getTime());
+        for (ServiceEnt service: node.getServices()) {
+            try {
+                URL url = service.buildHealthURL();
+                try {
+                    AbstractMap.SimpleEntry<Integer, JsonElement> response = doRequest(url, Connection.Method.GET, null, null, null);
+                    if (response.getKey() >= 200 && response.getKey() <= 399) {
+                        service.setStatus(Status.UP);
+                        service.getHealthRequests().add(new HealthRequest(service, Status.UP));
+                    } else {
+                        service.getHealthRequests().add(new HealthRequest(service, Status.DOWN));
+                    }
+                } catch (Exception e) {
+                    service.setStatus(Status.DOWN);
+                    service.getHealthRequests().add(new HealthRequest(service, Status.DOWN));
+                }
+                serviceService.save(service);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                service.setStatus(Status.UNKNOWN);
+                service.getHealthRequests().add(new HealthRequest(service, Status.UNKNOWN));
+            }
+            log.info("Node: {},	Service: {},	Status: {}",node.getName(),service.getName(),service.getStatus());
+        }
+    }
+
     private AbstractMap.SimpleEntry<Integer,JsonElement> doRequest(URL url, Connection.Method method, Map<String,String> headers, Map<String,String> params, Map<String,String> queryParams) throws IOException {
         if (queryParams!=null) {
             url = buildQueryParams(url,queryParams);

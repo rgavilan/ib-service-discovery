@@ -1,6 +1,7 @@
 package es.um.asio.service.service.impl;
 
 import com.google.gson.JsonArray;
+import es.um.asio.service.jobs.CheckHealthOfServices;
 import es.um.asio.service.model.service.discovery.NodeEnt;
 import es.um.asio.service.model.service.discovery.ServiceEnt;
 import es.um.asio.service.model.service.discovery.TypeEnt;
@@ -27,6 +28,9 @@ public class ServiceDiscoveryServiceImpl implements ServiceDiscoveryService {
     @Autowired
     TypeServiceImp typeService;
 
+    @Autowired
+    CheckHealthOfServices checkHealthOfServices;
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public NodeEnt addService(String nodeName, String serviceName, String host, Integer port, String healthEndpoint) {
@@ -41,6 +45,7 @@ public class ServiceDiscoveryServiceImpl implements ServiceDiscoveryService {
                 )
         );
         nodeService.save(node);
+        checkHealthOfServices.checkHealthOfServices(node);
         return node;
     }
 
@@ -73,6 +78,31 @@ public class ServiceDiscoveryServiceImpl implements ServiceDiscoveryService {
     }
 
     @Override
+    public List<NodeEnt> getServices(String serviceName, String typeName) {
+        Map<Long,NodeEnt> nodes = new HashMap<>();
+        List<ServiceEnt> services = serviceService.getServiceByName(serviceName);
+        if (services!=null) {
+            for (ServiceEnt service :services) {
+                for (TypeEnt typeEnt : service.getTypes()) {
+                    if (typeEnt.getName().equals(typeName)) {
+                        NodeEnt node;
+                        if (nodes.get(typeEnt.getService().getNodeEnt().getId()) == null) { // Si no estaba en el map
+                            node = new NodeEnt();
+                            node.setId(typeEnt.getService().getNodeEnt().getId());
+                            node.setName(typeEnt.getService().getNodeEnt().getName());
+                            nodes.put(node.getId(), node);
+                        } else {
+                            node = nodes.get(service.getNodeEnt().getId());
+                        }
+                        node.addService(service);
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(nodes.values());
+    }
+
+    @Override
     public NodeEnt addType(String nodeName, String serviceName, String typeName, String suffixURL) {
         NodeEnt nodeEnt = nodeService.getNodeByName(nodeName);
         if (nodeEnt!=null) {
@@ -85,5 +115,11 @@ public class ServiceDiscoveryServiceImpl implements ServiceDiscoveryService {
         }
         nodeService.save(nodeEnt);
         return nodeEnt;
+    }
+
+    @Override
+    public List<NodeEnt> getAllNodes() {
+        List<NodeEnt> nodes = nodeService.findAll();
+        return nodes;
     }
 }

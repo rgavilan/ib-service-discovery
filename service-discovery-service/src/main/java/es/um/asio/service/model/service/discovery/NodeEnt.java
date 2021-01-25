@@ -29,7 +29,6 @@ public class NodeEnt {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = Columns.ID)
-    @EqualsAndHashCode.Include
     @ApiModelProperty(hidden = true)
     private long id;
 
@@ -43,7 +42,14 @@ public class NodeEnt {
     private Set<ServiceEnt> services;
 
     public void addService(ServiceEnt serviceEnt) {
-        this.services.add(serviceEnt);
+        if (this.services.contains(serviceEnt)) {
+            for (ServiceEnt s : this.services) {
+                if (s.getName().equals(serviceEnt.getName()))
+                    s.merge(serviceEnt);
+            }
+        } else {
+            this.services.add(serviceEnt);
+        }
     }
 
     /**

@@ -14,5 +14,9 @@ public interface ServiceDiscoveryService {
 
     List<NodeEnt> getServices(String serviceName);
 
+    List<NodeEnt> getServices(String serviceName,String typeName);
+
     NodeEnt addType(String nodeName, String serviceName, String typeName, String suffixURL);
+
+    List<NodeEnt> getAllNodes();
 }
