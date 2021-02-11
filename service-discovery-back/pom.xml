@@ -30,10 +30,10 @@
 			<artifactId>izertis-oauth-starter-jdk11</artifactId>
 		</dependency>
 
-		<dependency>
+<!--		<dependency>
 			<groupId>com.izertis.libraries</groupId>
 			<artifactId>izertis-swagger-starter</artifactId>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
@@ -65,6 +65,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
 		</dependency>
 
 		<!-- Testing -->

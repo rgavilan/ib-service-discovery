@@ -41,7 +41,7 @@
 	</build>
 
   <modules>
-    <module>service-discovery-back</module>
-    <module>service-discovery-service</module>
+	  <module>service-discovery-back</module>
+	  <module>service-discovery-service</module>
   </modules>
 </project>

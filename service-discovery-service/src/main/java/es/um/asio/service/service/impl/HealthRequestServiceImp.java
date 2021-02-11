@@ -24,61 +24,61 @@ public class HealthRequestServiceImp implements HealthRequestService {
     @Autowired
     HealthRequestRepository repository;
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public List<HealthRequest> getAllNodes() {
         return repository.findAll();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void delete(HealthRequest entity) {
         repository.delete(entity);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void delete(Long identifier) {
         repository.deleteById(identifier);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public Optional<HealthRequest> find(Long identifier) {
         return repository.findById(identifier);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public Page<HealthRequest> findPaginated(HealthRequestFilter filter, Pageable pageable) {
         return repository.findAll(filter, pageable);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public List<HealthRequest> findAll() {
         return repository.findAll();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public HealthRequest save(HealthRequest entity) {
         return repository.save(entity);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public List<HealthRequest> save(Iterable<HealthRequest> entities) {
         return repository.saveAll(entities);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public HealthRequest update(HealthRequest entity) throws NoSuchEntityException {
         return repository.save(entity);
     }
 
-    @Override
+    // @Override
     public void deleteOldHealthRequest(Date date) {
         HealthRequestFilter f = new HealthRequestFilter();
         f.add(new SearchCriteria("requestDate", new Date().getTime(), SearchOperation.LESS_THAN_EQUAL));

@@ -31,7 +31,7 @@ public class ServiceDiscoveryServiceImpl implements ServiceDiscoveryService {
     @Autowired
     CheckHealthOfServices checkHealthOfServices;
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.SUPPORTS, readOnly = false)
     @Override
     public NodeEnt addService(String nodeName, String serviceName, String host, Integer port, String healthEndpoint) {
 
@@ -45,11 +45,16 @@ public class ServiceDiscoveryServiceImpl implements ServiceDiscoveryService {
                 )
         );
         nodeService.save(node);
-        checkHealthOfServices.checkHealthOfServices(node);
+        try {
+            checkHealthOfServices.checkHealthOfServices(node);
+        } catch (Exception e) {
+
+        }
+        // checkHealthOfServices.checkHealthOfServices(node);
         return node;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    // @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public NodeEnt getNode(String nodeName) {
         return nodeService.getNodeByName(nodeName);
