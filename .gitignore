@@ -28,3 +28,4 @@ service-discovery-back/target/generated-sources/
 service-discovery-back/target/generated-test-sources/
 service-discovery-service/target/generated-test-sources/
 target/
+.idea/
